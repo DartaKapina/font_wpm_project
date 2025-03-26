@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface TimerProps {
   duration: number; // Duration in seconds
-  onComplete?: () => void;
+  onComplete: () => void;
   startTime?: number; // Optional timestamp to sync with
   isRunning?: boolean;
 }
@@ -33,7 +33,7 @@ const Timer = ({
 
         if (remaining <= 0) {
           stopTimer();
-          onComplete?.();
+          onComplete();
         }
       };
 
