@@ -1,0 +1,54 @@
+{
+  "fontFamily": {
+    "values": ["Arial", "Times New Roman", "Courier New", "Comic Sans MS", "Impact"],
+    "type": "choice"
+  },
+  "fontSize": {
+    "values": ["12px", "14px", "16px", "18px", "20px", "24px"],
+    "type": "choice"
+  },
+  "fontWeight": {
+    "values": ["300", "400", "500", "600", "700"],
+    "type": "choice"
+  },
+  "fontStyle": {
+    "values": ["normal", "italic"],
+    "type": "choice"
+  },
+  "textOpacity": {
+    "min": 0.5,
+    "max": 1.0,
+    "decimals": 2,
+    "type": "range"
+  },
+  "lineHeight": {
+    "min": 1.0,
+    "max": 2.0,
+    "decimals": 1,
+    "type": "range"
+  },
+  "color": {
+    "values": ["#333333", "#666666", "#444444", "#555555", "#222222"],
+    "type": "choice"
+  },
+  "backgroundColor": {
+    "values": ["#FFFFFF", "#F5F5F5", "#EEEEEE", "#F8F8F8", "#FAFAFA"],
+    "type": "choice"
+  },
+  "letterSpacing": {
+    "min": -1,
+    "max": 2,
+    "decimals": 1,
+    "type": "range"
+  },
+  "wordSpacing": {
+    "min": 0,
+    "max": 5,
+    "decimals": 1,
+    "type": "range"
+  },
+  "textAlign": {
+    "values": ["left", "center", "right"],
+    "type": "choice"
+  }
+} 
