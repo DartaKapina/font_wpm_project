@@ -15,6 +15,12 @@ interface LeaderboardEntryProps {
   rank: number;
 }
 
+export const columnStyles = {
+  rank: { width: "5%", minWidth: "50px" },
+  user: { width: "20%", minWidth: "150px" },
+  stats: { width: "75%" },
+};
+
 const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ entry, rank }) => {
   const [expanded, setExpanded] = useState(false);
   const [sessionStats, setSessionStats] = useState<any>(null);
@@ -48,13 +54,12 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ entry, rank }) => {
         sx={{
           cursor: "pointer",
           "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.05)" },
+          width: "100%",
         }}
       >
-        <TableCell sx={{ width: "5%", minWidth: "50px" }}>{rank}</TableCell>
-        <TableCell sx={{ width: "20%", minWidth: "150px" }}>
-          {entry.user_id}
-        </TableCell>
-        <TableCell>
+        <TableCell sx={columnStyles.rank}>{rank}</TableCell>
+        <TableCell sx={columnStyles.user}>{entry.user_id}</TableCell>
+        <TableCell sx={columnStyles.stats}>
           <Box
             sx={{
               display: "flex",
@@ -64,27 +69,27 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ entry, rank }) => {
               gap: 2,
             }}
           >
-            <Box sx={{ display: "flex", gap: 6, minWidth: "400px" }}>
-              <Box sx={{ minWidth: "100px" }}>
+            <Box sx={{ display: "flex", gap: 6, flex: 1 }}>
+              <Box sx={{ flex: 1 }}>
                 <Typography variant="body2" color="text.secondary">
                   WPM
                 </Typography>
                 <Typography>{entry.wpm.toFixed(1)}</Typography>
               </Box>
-              <Box sx={{ minWidth: "100px" }}>
+              <Box sx={{ flex: 1 }}>
                 <Typography variant="body2" color="text.secondary">
                   Accuracy
                 </Typography>
                 <Typography>{entry.accuracy.toFixed(1)}%</Typography>
               </Box>
-              <Box sx={{ minWidth: "100px" }}>
+              <Box sx={{ flex: 1 }}>
                 <Typography variant="body2" color="text.secondary">
                   Length
                 </Typography>
-                <Typography>{entry.text_length}</Typography>
+                <Typography>{entry.text_length} words</Typography>
               </Box>
             </Box>
-            <Typography color="text.secondary" sx={{ minWidth: "100px" }}>
+            <Typography color="text.secondary" sx={{ width: "120px" }}>
               {new Date(entry.timestamp).toLocaleDateString()}
             </Typography>
           </Box>
@@ -113,7 +118,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ entry, rank }) => {
                       flex: "0 0 auto",
                     }}
                   >
-                    <StatBox label="User ID" value={sessionStats.user_id} />
+                    <StatBox label="Username" value={sessionStats.user_id} />
                     <StatBox label="WPM" value={sessionStats.wpm.toFixed(1)} />
                     <StatBox
                       label="Accuracy"

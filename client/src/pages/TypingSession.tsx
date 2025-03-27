@@ -62,7 +62,7 @@ const TypingSession: React.FC = () => {
           correct++;
         }
       }
-      const timeElapsed = (Date.now() - startTime) / 60000;
+      const timeElapsed = (Date.now() - startTime) / 60000 + 0.004;
 
       const newAccuracy = (correct / Math.max(typed.length, 1)) * 100;
       setAccuracy(Math.round(newAccuracy));

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { TypingResultResponse } from "../interfaces/TypingResult";
 import LeaderboardEntry from "./LeaderboardEntry";
+import { columnStyles } from "./LeaderboardEntry";
 
 interface LeaderboardTableProps {
   results: TypingResultResponse[];
@@ -18,15 +19,12 @@ interface LeaderboardTableProps {
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ results }) => {
   return (
     <TableContainer component={Paper}>
-      <Table>
+      <Table sx={{ width: "100%", tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell>Rank</TableCell>
-            <TableCell>User</TableCell>
-            <TableCell align="right">WPM</TableCell>
-            <TableCell align="right">Accuracy</TableCell>
-            <TableCell align="right">Text Length</TableCell>
-            <TableCell>Date</TableCell>
+            <TableCell sx={columnStyles.rank}>#</TableCell>
+            <TableCell sx={columnStyles.user}>User</TableCell>
+            <TableCell sx={columnStyles.stats}>Stats</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
