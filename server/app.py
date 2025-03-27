@@ -24,7 +24,7 @@ def save_typing_result():
     data = request.json
     required_fields = ['user_id', 'wpm',
                        'accuracy', 'text_length',
-                       'time_limit', 'key_data']
+                       'key_data', 'time_taken']
 
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
@@ -35,8 +35,8 @@ def save_typing_result():
             wpm=float(data['wpm']),
             accuracy=float(data['accuracy']),
             text_length=int(data['text_length']),
-            time_limit=int(data['time_limit']),
-            key_data=data['key_data']
+            key_data=data['key_data'],
+            time_taken=int(data['time_taken'])
         )
         result = db.save_result(typing_result)
         return jsonify({'id': result['id']}), 201

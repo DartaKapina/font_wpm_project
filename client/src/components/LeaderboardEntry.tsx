@@ -51,7 +51,9 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ entry, rank }) => {
         }}
       >
         <TableCell sx={{ width: "5%", minWidth: "50px" }}>{rank}</TableCell>
-        <TableCell sx={{ width: "20%", minWidth: "150px" }}>{entry.user_id}</TableCell>
+        <TableCell sx={{ width: "20%", minWidth: "150px" }}>
+          {entry.user_id}
+        </TableCell>
         <TableCell>
           <Box
             sx={{
@@ -118,15 +120,15 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ entry, rank }) => {
                       value={`${sessionStats.accuracy.toFixed(1)}%`}
                     />
                     <StatBox
-                      label="Time Limit"
-                      value={`${sessionStats.time_limit}s`}
+                      label="Time Taken"
+                      value={`${sessionStats.time_taken}s`}
                     />
                   </Box>
                   <Box sx={{ flex: "1 1 auto", minWidth: "300px" }}>
                     <GraphStatistic
                       data={sessionStats.key_data}
                       expected_value={100}
-                      time_limit={sessionStats.time_limit}
+                      time_limit={sessionStats.time_taken}
                       color="#4CAF50"
                       label="WPM over time"
                     />

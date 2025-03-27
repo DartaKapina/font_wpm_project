@@ -3,7 +3,7 @@ export interface TypingResult {
   wpm: number;
   accuracy: number;
   text_length: number;
-  time_limit: number;
+  time_taken: number;
   key_data: {
     time: number;
     value: number;

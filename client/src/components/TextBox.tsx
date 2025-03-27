@@ -5,7 +5,7 @@ interface TextBoxProps {
   textSettings: TextSettings | null;
   onChange?: (typed: string) => void;
   onStartTyping?: () => void;
-  onFinish?: () => void;
+  onFinish?: (remainingTime?: number) => void;
   onBackspace?: () => void;
   onMistake?: (worstTypoSpiral: number) => void;
   disabled?: boolean;
@@ -30,6 +30,15 @@ const TextBox = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const worstTypoSpiral = useRef(0);
   const currentTypoSpiral = useRef(0);
+
+  // Add this new useEffect to reset state when text changes
+  useEffect(() => {
+    setTypedChars(Array(referenceText.length).fill(""));
+    setCurrentIndex(0);
+    setStarted(false);
+    worstTypoSpiral.current = 0;
+    currentTypoSpiral.current = 0;
+  }, [referenceText]);
 
   // Focus on mount and when disabled changes to false
   useEffect(() => {
@@ -114,8 +123,8 @@ const TextBox = ({
       >
         {referenceText.split("").map((char, index) => {
           const typedChar = typedChars[index];
-          let color = "black";
-          if (typedChar !== "") {
+          let color = textSettings?.color || "black";
+          if (started && typedChar !== "") {
             color = typedChar === char ? "green" : "red";
           }
           return (
@@ -124,7 +133,9 @@ const TextBox = ({
               style={{
                 color,
                 backgroundColor:
-                  index === currentIndex ? "#e0e0e0" : "transparent",
+                  index === currentIndex
+                    ? "#e0e0e0"
+                    : textSettings?.backgroundColor || "transparent",
               }}
             >
               {char}

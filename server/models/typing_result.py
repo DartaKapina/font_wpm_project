@@ -10,7 +10,7 @@ class TypingResult(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(String, nullable=False)
-    time_limit = Column(Integer, nullable=False)
+    time_taken = Column(Integer, nullable=False)
     wpm = Column(Float, nullable=False)
     accuracy = Column(Float, nullable=False)
     text_length = Column(Integer, nullable=False)
@@ -21,7 +21,7 @@ class TypingResult(Base):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'time_limit': self.time_limit,
+            'time_taken': self.time_taken,
             'wpm': self.wpm,
             'accuracy': self.accuracy,
             'text_length': self.text_length,

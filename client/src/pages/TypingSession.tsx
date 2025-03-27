@@ -27,6 +27,7 @@ const TypingSession: React.FC = () => {
     wpm: number;
     accuracy: number;
     text_length: number;
+    time_taken: number;
   } | null>(null);
 
   useEffect(() => {
@@ -79,28 +80,37 @@ const TypingSession: React.FC = () => {
     }
   };
 
-  const handleFinish = useCallback(() => {
-    setIsRunning(false);
-    setIsFinished(true);
-    console.log("Finished");
+  const handleFinish = useCallback(
+    (remainingTime?: number) => {
+      if (isFinished) return; // Prevent multiple executions
+      setIsRunning(false);
+      setIsFinished(true);
+      console.log("Finished in", time_limit - (remainingTime ?? 0), "seconds");
 
-    // Calculate final stats
-    const lastWpmDataPoint = wpmData[wpmData.length - 1];
-    if (lastWpmDataPoint) {
-      setPendingStats({
-        wpm: lastWpmDataPoint.value,
-        accuracy: accuracy,
-        text_length: referenceText.length,
-      });
-      setShowNamePrompt(true);
-    }
-  }, [wpmData, accuracy, referenceText]);
+      // Calculate final stats
+      const lastWpmDataPoint = wpmData[wpmData.length - 1];
+      if (lastWpmDataPoint) {
+        const time_taken = time_limit - (remainingTime ?? 0);
+        const text_length_words = referenceText.split(" ").length;
+        // Split spaces
+        setPendingStats({
+          wpm: lastWpmDataPoint.value,
+          accuracy: accuracy,
+          text_length: text_length_words,
+          time_taken: time_taken,
+        });
+        setShowNamePrompt(true);
+      }
+    },
+    [wpmData, accuracy, referenceText, time_limit, isFinished]
+  );
 
   const submitResults = async (stats: {
     wpm: number;
     accuracy: number;
     text_length: number;
     user_id: string;
+    time_taken: number;
   }) => {
     try {
       const resultData: TypingResult = {
@@ -108,7 +118,7 @@ const TypingSession: React.FC = () => {
         wpm: stats.wpm,
         accuracy: stats.accuracy,
         text_length: stats.text_length,
-        time_limit: time_limit,
+        time_taken: stats.time_taken,
         key_data: wpmData,
       };
 
@@ -171,7 +181,7 @@ const TypingSession: React.FC = () => {
           duration={time_limit}
           isRunning={isRunning}
           startTime={startTime ?? undefined}
-          onComplete={handleFinish}
+          onComplete={(remainingTime) => handleFinish(remainingTime)}
         />
       </div>
       <div
@@ -217,7 +227,9 @@ const TypingSession: React.FC = () => {
             textSettings={textSettings ?? null}
             onStartTyping={handleStartTyping}
             onChange={handleChange}
-            onFinish={handleFinish}
+            onFinish={() => {
+              setIsRunning(false); // This will trigger Timer's useEffect to call onComplete with remaining time
+            }}
             onBackspace={handleBackspace}
             onMistake={handleMistake}
             disabled={isFinished}

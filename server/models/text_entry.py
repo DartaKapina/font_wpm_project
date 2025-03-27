@@ -9,12 +9,12 @@ class TextEntry(Base):
     __tablename__ = 'text_entries'
 
     id = Column(Integer, primary_key=True)
-    text = Column(String, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    content = Column(String, nullable=False)
+    source = Column(String(255))
 
     def to_dict(self):
         return {
             'id': self.id,
-            'text': self.text,
-            'timestamp': self.timestamp.isoformat()
+            'content': self.content,
+            'source': self.source
         }

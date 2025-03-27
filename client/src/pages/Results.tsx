@@ -90,7 +90,7 @@ const Results = () => {
         <GraphStatistic
           data={result.key_data}
           expected_value={100}
-          time_limit={result.time_limit}
+          time_limit={result.time_taken}
           color="#4CAF50"
           label="WPM over time"
         />

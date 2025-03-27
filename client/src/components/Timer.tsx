@@ -2,18 +2,18 @@ import { useState, useEffect, useRef } from "react";
 
 interface TimerProps {
   duration: number; // Duration in seconds
-  onComplete: () => void;
+  isRunning: boolean;
   startTime?: number; // Optional timestamp to sync with
-  isRunning?: boolean;
+  onComplete: (remainingTime: number) => void;
 }
 
-const Timer = ({
+const Timer: React.FC<TimerProps> = ({
   duration,
-  onComplete,
+  isRunning,
   startTime,
-  isRunning = false,
+  onComplete,
 }: TimerProps) => {
-  const [timeLeft, setTimeLeft] = useState(duration);
+  const [timeLeft, setTimeLeft] = useState<number>(duration);
   const intervalRef = useRef<number | null>(null);
 
   const stopTimer = () => {
@@ -24,33 +24,33 @@ const Timer = ({
   };
 
   useEffect(() => {
-    if (isRunning && startTime) {
-      // Initial sync
-      const syncTimer = () => {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        const remaining = Math.max(duration - elapsed, 0);
-        setTimeLeft(remaining);
-
-        if (remaining <= 0) {
-          stopTimer();
-          onComplete();
-        }
-      };
-
-      // Sync once immediately
-      syncTimer();
-
-      // Then set up the interval
-      intervalRef.current = setInterval(syncTimer, 1000);
-
-      return () => {
-        stopTimer();
-      };
-    } else {
+    if (!isRunning && startTime) {
+      // Calculate remaining time when stopping
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, duration - elapsed);
+      onComplete(remaining);
       stopTimer();
-      setTimeLeft(duration);
+      return;
     }
-  }, [duration, startTime, isRunning, onComplete]);
+
+    if (!isRunning || !startTime) {
+      setTimeLeft(duration);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, duration - elapsed);
+      setTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        onComplete(0);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [isRunning, startTime, duration, onComplete]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;

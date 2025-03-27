@@ -1,7 +1,8 @@
-from sqlalchemy import create_engine, desc
+from sqlalchemy import create_engine, desc, func
 from sqlalchemy.orm import sessionmaker
 from models.typing_result import Base, TypingResult
 from models.text_settings import TextSettings
+from models.text_entry import TextEntry
 import os
 from datetime import datetime, timedelta
 
@@ -14,12 +15,21 @@ class DatabaseController:
         # Use SQLite database in the data directory
         database_url = 'sqlite:///data/typing_test.db?check_same_thread=False'
         self.engine = create_engine(database_url)
+
+        TextEntry.metadata.create_all(self.engine)
         Base.metadata.create_all(self.engine)
+
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
     def get_random_text(self):
-        return "Hello, world!"
+        # Get a random text entry from the database
+        random_text = self.session.query(
+            TextEntry).order_by(func.random()).first()
+
+        if random_text:
+            return random_text.content
+        return "No texts available in database"  # Fallback text
 
     def get_random_text_settings(self):
         return TextSettings.generate_random_settings()
@@ -57,7 +67,7 @@ class DatabaseController:
             'wpm': result.wpm,
             'accuracy': result.accuracy,
             'text_length': result.text_length,
-            'time_limit': result.time_limit,
+            'time_taken': result.time_taken,
             'key_data': result.key_data
         }
 
@@ -67,3 +77,9 @@ class DatabaseController:
         if result is None:
             return None
         return result.to_dict()
+
+    def add(self, obj):
+        self.session.add(obj)
+
+    def commit(self):
+        self.session.commit()
